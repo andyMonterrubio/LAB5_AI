@@ -90,12 +90,12 @@ def create_id3(attributes, data):
 
 
 def print_tree(tree, attributes, identation = 0):
-    print ' ' * identation
-    if isinstance(tree, str):
-        print tree
-    else:
-        for key, value in tree.iteritems():
-            print key + ': ',
+    print ' ' * identation,
+    for key, value in tree.iteritems():
+        if key == 'ANSWER':
+            print key + ': ' + value
+        else:
+            print key
             print_tree(value, attributes, identation+2)
 
 
