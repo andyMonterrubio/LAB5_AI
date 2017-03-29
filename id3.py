@@ -81,22 +81,34 @@ def create_id3(attributes, data):
         new_data = filter_data(data, value, maxgain[0])
         new_node = attr_name + ': ' + value
         decision_tree[new_node] = create_id3(new_attributes, new_data)
-        #if not decision_tree[new_node]:
-        #    decision_tree[new_node] = {}
-        #    for row in data:
-        #        decision_tree[new_node]['ANSWER'] = row[-1]
 
     return decision_tree
 
 
+# prints tree following the attribute's order
 def print_tree(tree, attributes, identation = 0):
-    print ' ' * identation,
-    for key, value in tree.iteritems():
-        if key == 'ANSWER':
-            print key + ': ' + value
-        else:
-            print key
-            print_tree(value, attributes, identation+2)
+    if len(tree) > 1:
+        attr_name = tree.keys()[0].split(': ')[0]
+        # find attribute used by tree node
+        for attr in attributes:
+            if attr['name'] == attr_name:
+                # iterate attr values following input order
+                for value in attr['values']:
+                    # find tree node using current value
+                    for node in tree.keys():
+                        if value == node.split(': ')[1]:
+                            for i in range(0, identation):
+                                print '',
+                            print node
+                            print_tree(tree[node], attributes, identation+2)
+                break
+
+    # if it's a leaf, print as answer
+    else:
+        for i in range(0, identation):
+            print '',
+
+        print 'ANSWER: ' + tree.values()[0]
 
 
 if __name__ == "__main__":
@@ -127,4 +139,4 @@ if __name__ == "__main__":
     # print data
     
     decision_tree = create_id3(attributes, data)
-    print print_tree(decision_tree, attributes)
+    print_tree(decision_tree, attributes)
